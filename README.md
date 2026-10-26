@@ -33,7 +33,7 @@ Read-only diagnostics, including the current firmware curves:
 .\target\release\nuctool.exe --diagnose
 ```
 
-The four pages are Overview, CPU & battery, Fan curves, and Capabilities. Overview shows the detected machine's hardware and live readings. Select CPU fan or GPU fan, then drag a graph point horizontally for temperature and vertically for fan speed. The graph shows the editable points without connecting or hysteresis guide lines. Dragging preserves the selected point's hysteresis gap where possible and prevents points crossing their neighbors.
+The four pages are Overview, CPU & battery, Fan curves, and Capabilities. Overview shows the detected machine's hardware and live readings. Select CPU fan or GPU fan, then drag a graph point horizontally for temperature and vertically for fan speed. A solid line connects the editable points; the dotted hysteresis guide is hidden. Dragging preserves the selected point's hysteresis gap where possible and prevents points crossing their neighbors.
 
 The selected point also has precise temperature and speed fields. Left/Right selects a graph point, Up/Down adjusts duty by 0.5%, and Ctrl+Left/Right adjusts temperature by 1°C. Firmware sentinel entries are preserved internally and are not draggable. Read hardware and Load saved only edit the form. Apply curve is the separate hardware write action. New curves must reach at least 80% duty by 95°C before the sentinel entries. Full fan boost toggles on/off, with its button label reflecting the firmware state.
 

@@ -206,6 +206,20 @@ impl Graph {
             } else {
                 0x002F76CB
             };
+            let pen = CreatePen(PS_SOLID, 2, color);
+            let old_pen = SelectObject(dc, pen);
+            let mut started = false;
+            for point in self.points().iter().filter(|point| point.up != 255) {
+                let (x, y) = self.position(point.up, point.duty);
+                if started {
+                    LineTo(dc, x, y);
+                } else {
+                    MoveToEx(dc, x, y, ptr::null_mut());
+                    started = true;
+                }
+            }
+            SelectObject(dc, old_pen);
+            DeleteObject(pen);
             let brush = CreateSolidBrush(color);
             let old_brush = SelectObject(dc, brush);
             for (index, p) in self
