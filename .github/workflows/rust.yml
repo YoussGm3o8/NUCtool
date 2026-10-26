@@ -1,38 +1,31 @@
-name: "Build"
+name: Native Rust
 
 on:
+  push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  publish-tauri:
-    permissions:
-      contents: write
-
+  windows:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          node-version: lts/*
-
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install frontend dependencies
-        run: yarn install
-
-      - name: Build Tauri application
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          components: rustfmt, clippy
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets --locked -- -D warnings
+      - run: cargo test --locked
+      - run: cargo build --release --locked
+      - uses: actions/upload-artifact@v4
         with:
-          tagName: NUCtool-v__VERSION__
-          releaseName: "NUCtool v__VERSION__"
-          releaseBody: "自动发布的新版本"
-          releaseDraft: true
-          prerelease: false
+          name: NUCtool-windows-x64
+          path: |
+            target/release/nuctool.exe
+            README.md
+            LICENSE.txt
+            docs/*.md
